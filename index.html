@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Physical Education Quiz (20 Items)</title>
+  <title>Physical Education Quiz</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 30px;
       background-color: #eef6fb;
+      padding: 20px;
     }
     h1 {
       text-align: center;
@@ -72,7 +72,7 @@
 </head>
 <body>
 
-<h1>Physical Education Quiz (20 Items)</h1>
+<h1>Physical Education Quiz (Exact Wordings)</h1>
 <form id="quizForm"></form>
 
 <button onclick="submitQuiz()">Submit Quiz</button>
@@ -87,54 +87,54 @@
 
 <script>
   const questions = [
-    "1. PE is education through ________.",
-    "2. Translate: 'mens sana en corpore sano' (3 words).",
-    "3. Ability to carry workload and enjoy play.",
-    "4. Give one component of physical fitness.",
-    "5. A health-related component of fitness.",
-    "6. A skill-related component of fitness.",
-    "7. Ability of heart, lungs, and vessels to supply nutrients.",
-    "8. Max force from muscle group.",
-    "9. Strength used in jumping/sprint.",
-    "10. Strength used in lifting heavy objects.",
-    "11. Strength in repeated contractions.",
-    "12. Flexibility of joints.",
-    "13. Ratio of fat to lean tissue.",
-    "14. Ability to move quickly.",
-    "15. Release force in short time.",
-    "16. Quick change of direction.",
-    "17. Ability to keep body in position.",
-    "18. Type of balance when not moving.",
-    "19. Type of balance during movement.",
-    "20. Time between signal and reaction."
+    "1. PHYSICAL EDUCATION is the education of ____, and through human movement.",
+    "2. Ancient Greece 'mens sana en corpore sano' means ____, ____, ____.",
+    "3. PHYSICAL FITNESS means the ability to carry one's workload without ____ and participate in recreation.",
+    "4. Components of Physical Fitness (1 of 2).",
+    "5. Components of Physical Fitness (2 of 2).",
+    "6. Health related component: ability of the heart, blood vessels and lungs to deliver essential nutrients.",
+    "7. Health related component: ability of a muscle or group to exert one maximal force.",
+    "8. Explosive strength is apparent in activities requiring ____, ____, and sudden changes in direction.",
+    "9. Static strength requires little muscle shortening and is necessary in overcoming ____ ____.",
+    "10. Dynamic strength is found in ____ muscle contraction.",
+    "11. Muscular endurance is the ability of a muscle or group to exert ____ muscular contraction.",
+    "12. Joint flexibility is the ability of the joints to move through the ____ ____ of motion.",
+    "13. Body composition is the relationship between ____ tissue and lean body tissue.",
+    "14. Skill related component: ability to make successive movements in shortest possible time.",
+    "15. Power refers to the ability to release maximum ____ in the shortest possible time.",
+    "16. Agility is the ability to change position or direction with quickness and ____ of movement.",
+    "17. Balance is the ability to control organic equipment neuromuscular state of ____.",
+    "18. Static balance is maintaining a ____ position.",
+    "19. Dynamic balance is maintaining balance while ____.",
+    "20. Reaction time refers to the interval of time between the signal to respond and the beginning of the ____."
   ];
 
   const correctAnswers = [
-    ["human movement"],
-    ["sound body mind"],
-    ["physical fitness"],
-    ["health related", "skill related"],
-    ["strength", "flexibility", "body composition", "cardio-respiratory endurance", "muscular endurance"],
-    ["speed", "agility", "power", "reaction time", "coordination", "balance"],
+    ["by"],
+    ["a", "sound", "mind"], // Will accept any of the three words
+    ["staggering"],
+    ["health related"],
+    ["skill related"],
     ["cardio-respiratory endurance"],
     ["strength"],
-    ["explosive strength"],
-    ["static strength"],
-    ["muscular endurance"],
-    ["joint flexibility"],
-    ["body composition"],
+    ["movement", "speed", "direction"], // Any is accepted
+    ["heavy", "resistance"], // Any is accepted
+    ["repeated"],
+    ["repeated"],
+    ["full", "range"], // Accept any of the words
+    ["fat"],
     ["speed"],
-    ["power"],
-    ["agility"],
-    ["balance"],
-    ["static balance"],
-    ["dynamic balance"],
-    ["reaction time"]
+    ["force"],
+    ["lightness"],
+    ["equilibrium"],
+    ["fixed"],
+    ["moving"],
+    ["response"]
   ];
 
   const form = document.getElementById("quizForm");
 
-  // Render quiz form
+  // Render form
   questions.forEach((q, i) => {
     const div = document.createElement("div");
     div.className = "question";
@@ -160,7 +160,7 @@
       const answerDiv = document.getElementById(`a${i}`);
       const normalizedInput = normalize(userInput);
 
-      const isCorrect = correctAnswers[i].some(ans => normalize(ans) === normalizedInput);
+      const isCorrect = correctAnswers[i].some(ans => normalizedInput.includes(normalize(ans)));
 
       if (isCorrect) {
         score++;
