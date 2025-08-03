@@ -2,180 +2,190 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Physical Education Quiz</title>
+  <title>Physical Education Quiz (20 Items)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
-      background-color: #f9f9f9;
+      background-color: #eef6fb;
     }
     h1 {
       text-align: center;
     }
     .question {
       background: #fff;
-      padding: 20px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     input[type="text"] {
       width: 100%;
       padding: 8px;
-      margin-top: 10px;
+      margin-top: 8px;
     }
     .answer {
-      margin-top: 10px;
+      margin-top: 8px;
       color: green;
       font-weight: bold;
     }
     button {
       display: block;
       margin: 20px auto;
-      padding: 12px 30px;
+      padding: 10px 30px;
       font-size: 16px;
+      cursor: pointer;
     }
     #score {
       text-align: center;
       font-size: 20px;
       margin-top: 20px;
     }
-    #popup {
-      display: none;
-      position: fixed;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 20px;
-      width: 80%;
-      max-width: 600px;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -20%);
-      z-index: 10;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-    #overlay {
+    #popup, #overlay {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
+    }
+    #overlay {
       background: rgba(0,0,0,0.5);
       z-index: 9;
+    }
+    #popup {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      margin: auto;
+      top: 10%;
+      left: 0;
+      right: 0;
+      position: absolute;
+      z-index: 10;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    #popup h3 {
+      margin-top: 0;
     }
   </style>
 </head>
 <body>
 
-  <h1>Physical Education Quiz</h1>
-  <form id="quizForm">
-    <div class="question">
-      <p>1. What is Physical Education?</p>
-      <input type="text" name="q1">
-      <div class="answer" id="a1"></div>
-    </div>
+<h1>Physical Education Quiz (20 Items)</h1>
+<form id="quizForm"></form>
 
-    <div class="question">
-      <p>2. Translate "mens sana en corpore sano".</p>
-      <input type="text" name="q2">
-      <div class="answer" id="a2"></div>
-    </div>
+<button onclick="submitQuiz()">Submit Quiz</button>
+<div id="score"></div>
 
-    <div class="question">
-      <p>3. What is Physical Fitness?</p>
-      <input type="text" name="q3">
-      <div class="answer" id="a3"></div>
-    </div>
+<div id="overlay"></div>
+<div id="popup">
+  <h3>Correct Answers Summary</h3>
+  <ul id="correctAnswersList"></ul>
+  <button onclick="closePopup()">Close</button>
+</div>
 
-    <div class="question">
-      <p>4. Enumerate the 2 components of physical fitness.</p>
-      <input type="text" name="q4">
-      <div class="answer" id="a4"></div>
-    </div>
+<script>
+  const questions = [
+    "1. PE is education through ________.",
+    "2. Translate: 'mens sana en corpore sano' (3 words).",
+    "3. Ability to carry workload and enjoy play.",
+    "4. Give one component of physical fitness.",
+    "5. A health-related component of fitness.",
+    "6. A skill-related component of fitness.",
+    "7. Ability of heart, lungs, and vessels to supply nutrients.",
+    "8. Max force from muscle group.",
+    "9. Strength used in jumping/sprint.",
+    "10. Strength used in lifting heavy objects.",
+    "11. Strength in repeated contractions.",
+    "12. Flexibility of joints.",
+    "13. Ratio of fat to lean tissue.",
+    "14. Ability to move quickly.",
+    "15. Release force in short time.",
+    "16. Quick change of direction.",
+    "17. Ability to keep body in position.",
+    "18. Type of balance when not moving.",
+    "19. Type of balance during movement.",
+    "20. Time between signal and reaction."
+  ];
 
-    <div class="question">
-      <p>5. What are the 5 health-related components of physical fitness?</p>
-      <input type="text" name="q5">
-      <div class="answer" id="a5"></div>
-    </div>
+  const correctAnswers = [
+    ["human movement"],
+    ["sound body mind"],
+    ["physical fitness"],
+    ["health related", "skill related"],
+    ["strength", "flexibility", "body composition", "cardio-respiratory endurance", "muscular endurance"],
+    ["speed", "agility", "power", "reaction time", "coordination", "balance"],
+    ["cardio-respiratory endurance"],
+    ["strength"],
+    ["explosive strength"],
+    ["static strength"],
+    ["muscular endurance"],
+    ["joint flexibility"],
+    ["body composition"],
+    ["speed"],
+    ["power"],
+    ["agility"],
+    ["balance"],
+    ["static balance"],
+    ["dynamic balance"],
+    ["reaction time"]
+  ];
 
-    <div class="question">
-      <p>6. What are the 3 discrete components of strength?</p>
-      <input type="text" name="q6">
-      <div class="answer" id="a6"></div>
-    </div>
+  const form = document.getElementById("quizForm");
 
-    <div class="question">
-      <p>7. What are the 6 skill-related components of physical fitness?</p>
-      <input type="text" name="q7">
-      <div class="answer" id="a7"></div>
-    </div>
+  // Render quiz form
+  questions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+      <p>${q}</p>
+      <input type="text" name="q${i}">
+      <div class="answer" id="a${i}"></div>
+    `;
+    form.appendChild(div);
+  });
 
-    <div class="question">
-      <p>8. What are the 3 aspects of balance?</p>
-      <input type="text" name="q8">
-      <div class="answer" id="a8"></div>
-    </div>
-  </form>
+  function normalize(str) {
+    return str.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
+  }
 
-  <button onclick="submitQuiz()">Submit Quiz</button>
-  <div id="score"></div>
+  function submitQuiz() {
+    let score = 0;
+    const answersList = document.getElementById("correctAnswersList");
+    answersList.innerHTML = "";
 
-  <div id="overlay"></div>
-  <div id="popup">
-    <h3>Correct Answers</h3>
-    <ul id="correctAnswersList"></ul>
-    <button onclick="closePopup()">Close</button>
-  </div>
+    questions.forEach((q, i) => {
+      const userInput = document.querySelector(`[name="q${i}"]`).value;
+      const answerDiv = document.getElementById(`a${i}`);
+      const normalizedInput = normalize(userInput);
 
-  <script>
-    const correctAnswers = [
-      "the education of by, and through human movement",
-      "a sound body in a sound mind",
-      "the ability to carry one's workload without staggering and participate in recreation",
-      "health related, skill related",
-      "cardio-respiratory endurance, strength, muscular endurance, joint flexibility, body composition",
-      "explosive strength, static strength, dynamic strength",
-      "speed, power, agility, balance, coordination, reaction time",
-      "static balance, dynamic balance, rotational balance"
-    ];
+      const isCorrect = correctAnswers[i].some(ans => normalize(ans) === normalizedInput);
 
-    function normalize(str) {
-      return str.trim().toLowerCase().replace(/\s+/g, ' ');
-    }
-
-    function submitQuiz() {
-      let score = 0;
-      let answersList = document.getElementById("correctAnswersList");
-      answersList.innerHTML = "";
-
-      for (let i = 0; i < correctAnswers.length; i++) {
-        const userAnswer = document.querySelector(`[name="q${i + 1}"]`).value;
-        const correct = correctAnswers[i];
-        const ansDiv = document.getElementById(`a${i + 1}`);
-
-        // Normalize for flexible checking
-        if (normalize(userAnswer).includes(normalize(correct.slice(0, 10)))) {
-          score++;
-          ansDiv.style.color = "green";
-        } else {
-          ansDiv.style.color = "red";
-        }
-
-        ansDiv.innerText = "Correct Answer: " + correct;
-        const li = document.createElement("li");
-        li.innerText = `Q${i + 1}: ${correct}`;
-        answersList.appendChild(li);
+      if (isCorrect) {
+        score++;
+        answerDiv.style.color = "green";
+      } else {
+        answerDiv.style.color = "red";
       }
 
-      document.getElementById("score").innerText = `You scored ${score} out of ${correctAnswers.length}`;
-      document.getElementById("popup").style.display = "block";
-      document.getElementById("overlay").style.display = "block";
-    }
+      answerDiv.innerText = "Correct Answer: " + correctAnswers[i][0];
 
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
-    }
-  </script>
+      const li = document.createElement("li");
+      li.innerText = `Q${i + 1}: ${correctAnswers[i][0]}`;
+      answersList.appendChild(li);
+    });
+
+    document.getElementById("score").innerText = `You scored ${score} out of ${questions.length}`;
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closePopup() {
+    document.getElementById("popup").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+  }
+</script>
+
 </body>
 </html>
